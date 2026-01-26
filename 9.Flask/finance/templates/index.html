@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block main %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="text-start">Symbol</th>
+                    <th class="text-end">Shares</th>
+                    <th class="text-end">Price</th>
+                    <th class="text-end">TOTAL</th>
+                    <th class="text-end"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Generate rows automatically -->
+                 {% for entry in entries %}
+                    <tr>
+                        <td class="text-start align-middle">{{ entry.symbol }}</td>
+                        <td class="text-end align-middle">{{ entry.shares }}</td>
+                        <td class="text-end align-middle">{{ entry.price | usd }}</td>
+                        <td class="text-end align-middle">{{ entry.total }}</td>
+                        <!-- Add form to sell straight from index screen -->
+                        <td class="align-middle">
+                            <form action="/sell" method="post" class="d-flex">
+                                <input type="hidden" name="symbol" value="{{ entry.symbol }}">
+                                <input name="shares" class="form-control mx-auto w-auto" type="text" placeholder="No. Shares">
+                                <button class="btn btn-primary" type="submit">Sell</button>
+                            </form>
+                        </td>
+                    </tr>
+                 {% endfor %}
+
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td class="border-0 fw-bold text-end" colspan=3>Cash</td>
+                    <td class="border-0 text-end">{{ cash }}</td>
+                </tr>
+                <tr>
+                    <td class="border-0 fw-bold text-end" colspan=3>TOTAL</td>
+                    <td class="border-0 w-bold text-end">{{ total }}</td>
+                </tr>
+            </tfoot>
+        </table>
+{% endblock %}

@@ -1,0 +1,103 @@
+header {
+  height: 130px;
+  text-align: center;
+  padding-top: calc(15px + 0.5vw);
+  color: white;
+  font-family: "Courier New";
+  background-color: gray;
+}
+
+h1 {
+  font-size: calc(40px + 2vw);
+  font-weight: bold;
+  text-shadow: 1px 1px 10px black;
+}
+
+body {
+  background-color: lightgray;
+}
+
+.card-cover {
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+  }
+
+.card-fighter {
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-size: cover;
+  }
+
+.fighter-name {
+  font-size: 50px;
+}
+
+.home:link {
+  color: gray;
+  text-decoration: none;
+  font-size: 20px;
+}
+
+.home:visited {
+  color: gray;
+}
+
+.home:hover {
+  color: dodgerblue;
+  text-decoration: underline;
+}
+
+p {
+  font-size: 20px;
+}
+
+#cover3 {background-blend-mode: difference;}
+
+footer {
+  position:fixed;bottom:0;left:0;right:0;height:30px;
+  background-color: gray;
+  color: white;
+  padding-left: 20px;
+}
+
+#cards-title {
+  color: gray;
+  border-bottom: solid 5px gray;
+  text-shadow: 1px 1px 5px white;
+}
+
+.youtube-video {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  padding-bottom: 20px;
+  border-bottom: solid 5px gray;
+}
+
+.image {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.bordered-div {
+  padding-bottom: 20px;
+  border-bottom: 5px solid gray;
+}
+
+.correct {
+  color: MediumSeaGreen;
+  font-weight: bold;
+  font-size: 25px;
+}
+
+.incorrect {
+  color: tomato;
+  font-weight: bold;
+  font-size: 25px;
+}
+
+#result2 {
+  color: tomato;
+  margin-top: -20px;
+}

@@ -1,0 +1,11 @@
+sort1 uses: Bubble Sort
+
+How do you know?: It was fast in the best case as it can stop functioning once the list is in order, but it scales poorly as n increases.
+
+sort2 uses: Merge Sort
+
+How do you know?: It always takes roughly the same amount of time, but scales better than Sort3 as n increases.
+
+sort3 uses: Selection Sort
+
+How do you know?: It always takes roughly the same amount of time, and scales poorly as n increases.

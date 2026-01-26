@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block main %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th class="text-start">Symbol</th>
+                <th class="text-end">Shares (<span style="color:DodgerBlue; font-weight: normal;">Buy</span>/<span style="color:tomato; font-weight: normal;">Sell</span>)</th>
+                <th class="text-end">Price</th>
+                <th class="text-end">Transacted</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in entries %}
+                {% if entry.type == "buy" %}
+                    <tr>
+                        <td class="text-start" style="color:DodgerBlue;">{{ entry.symbol }}</td>
+                        <td class="text-end" style="color:DodgerBlue;">{{ entry.shares }}</td>
+                        <td class="text-end" style="color:DodgerBlue;">{{ entry.price | usd}}</td>
+                        <td class="text-end" style="color:DodgerBlue;">{{ entry.datetime}}</td>
+                    </tr>
+                {% else %}
+                    <tr style="color: tomato;">
+                        <td class="text-start" style="color:tomato;">{{ entry.symbol }}</td>
+                        <td class="text-end" style="color:tomato;">{{ entry.shares }}</td>
+                        <td class="text-end" style="color:tomato;">{{ entry.price | usd}}</td>
+                        <td class="text-end" style="color:tomato;">{{ entry.datetime}}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+
+        </tbody>
+    </table>
+{% endblock %}

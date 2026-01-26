@@ -1,0 +1,8 @@
+1. I've no idea what colours represent what. The explanations on the page read like horoscopes.
+   But, depending on their mystic's definition of words, maybe purple?
+   The listener likes higher energy songs that can be danced to, but the valence is slightly leaning towards the sad end of the spectrum.
+
+2. This method doesn't take into account how much the listener listened to each song.
+   As an extreme example, a listener maye have listened to one high-energy, danceable song 1,000 times, and 99 slow, sad songs 1 time each.
+   Those 99 songs would drag their averages way down and misrepresent them.
+   I would give greater weighting to songs with higher play counts.

@@ -1,0 +1,4 @@
+10 tags used: <html>, <head>, <link>, <title>, <body>, <div>, <h1>, <h3>, <p>, <a>
+5 CSS properties used: background-color, background-repeat, background-position, background-size, background-blend-mode.
+Bootstrap usage: I used bootstrap to format cards on my home screen that will move and scale with the size of the screen.
+Javascript usage: I used javascript in a quiz for users to confirm their understanding of a tutorial on the site.
