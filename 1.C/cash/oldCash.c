@@ -1,16 +1,9 @@
 #include <cs50.h>
 #include <stdio.h>
 
-int get_change(void);
 int calc_coins(int change);
 
 int main(void)
-{
-    printf("%i\n", calc_coins(get_change()));
-}
-
-
-int get_change(void)
 {
     int change;
     do
@@ -18,9 +11,10 @@ int get_change(void)
         change = get_int("Change: ");
     }
     while (change < 0);
-    return change;
-}
 
+    int coins = calc_coins(change);
+    printf("%i\n", coins);
+}
 
 int calc_coins(int change)
 {
@@ -30,7 +24,7 @@ int calc_coins(int change)
     for (int i = 0; i < 4; i++)
     {
         n += change / coin_value[i];
-        change = change % coin_value[i];
+        change -= coin_value[i] * (change / coin_value[i]);
     }
     return n;
 }
