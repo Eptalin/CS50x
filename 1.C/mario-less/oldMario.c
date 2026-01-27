@@ -16,20 +16,25 @@ int main(void)
     while (height < 1);
 
     // Print a pyramid of that height
-    for (int i = 1; i <= height; i++)
+    for (int i = 0; i < height; i++)
     {
-        print_row(height - i, i);
+        print_row(height - i, i + 1);
     }
 }
-
 
 // Print a row of spaces and bricks
 void print_row(int spaces, int bricks)
 {
-    for (int i = 0; i < spaces + bricks; i++)
+    // Print row of spaces
+    for (int j = spaces - 1; j > 0; j--)
     {
-        char c = (i < spaces) ? ' ' : '#';
-        printf("%c", c);
+        printf(" ");
+    }
+
+    // Print row of bricks
+    for (int k = 0; k < bricks; k++)
+    {
+        printf("#");
     }
     printf("\n");
 }
