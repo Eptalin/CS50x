@@ -1,87 +1,88 @@
 #include <cs50.h>
 #include <stdio.h>
 
+bool check_luhn(long card);
+void report_type(bool luhn, long card);
+
 int main(void)
 {
     // Prompt user for card number
-    long card_number;
+    long card;
     do
     {
-        card_number = get_long("Card Number: ");
+        card = get_long("Card Number: ");
     }
-    while (card_number < 1);
+    while (card < 1);
 
-    // Save 2 copies of the card number to use in later calculations
-    long i = card_number;
-    long j = card_number;
+    // Check luhn
+    bool luhn = check_luhn(card);
 
-    // Separate out individual digits and add them
-    int sum_digits = 0;
+    // Report card type
+    report_type(luhn, card);
+}
+
+
+bool check_luhn(long card)
+{
+    bool every_other_digit = 0;
+    int checksum = 0;
+    int i, n, digit;
     do
     {
-        // Add digits up
-        sum_digits += card_number % 10;
-        card_number /= 10;
-
-        // Multiply every 2nd digit by 2 and add it
-        int n = card_number % 10 * 2;
-        if (n > 9)
+        // Sum up digits
+        if (!every_other_digit)
         {
-            n -= 9;
+            digit = (card % 10);
         }
-        sum_digits += n;
-        card_number /= 10;
-    }
-    while (card_number > 0);
-
-    // Report results
-    if (sum_digits % 10 == 0)
-    {
-        int length;
-        for (length = 0; i > 0; length++)
-        {
-            i /= 10;
-        }
-
-        do
-        {
-            j /= 10;
-        }
-        while (j > 100);
-
-        if (length == 13 || length == 16)
-        {
-            if (length == 16 && j > 50 && j < 56)
-            {
-                printf("MASTERCARD\n");
-            }
-            else if (j > 39 && j < 50)
-            {
-                printf("VISA\n");
-            }
-            else
-            {
-                printf("INVALID\n");
-            }
-        }
-        else if (length == 15)
-        {
-            if (j == 34 || j == 37)
-            {
-                printf("AMEX\n");
-            }
-            else
-            {
-                printf("INVALID\n");
-            }
-        }
+        // Multiply every other digit by 2 and sum up digits
         else
         {
-            printf("INVALID\n");
+            n = card % 10 * 2;
+            digit = (n > 9) ? n - 9 : n;
         }
-    }
-    else
+        checksum += digit;
+        card /= 10;
+        every_other_digit = !every_other_digit;
+    } while (card > 0);
+    // Return True if checksum = 0
+    bool luhn = checksum % 10 == 0;
+    return luhn;
+}
+
+
+void report_type(bool luhn, long card)
+{
+    // Grab card prefix
+    long prefix = card;
+    do
     {
-        printf("INVALID\n");
+        prefix /= 10;
+    } while (prefix > 100);
+    
+    // Calculate card length
+    int length = 0;
+    do
+    {
+        card /= 10;
+        length++;
+    } while (card > 0);
+    
+    // Print final result
+    string type = "INVALID\n";
+    if (luhn)
+    {
+        if (length == 16 && prefix > 50 && prefix < 56)
+        {
+            type = "MASTERCARD\n";
+        }
+        else if ((length == 13 || length == 16) && prefix /10 == 4)
+        {
+            type = "VISA\n";
+        }
+        else if (length == 15 && (prefix == 34 || prefix == 37))
+        {
+            type = "AMEX\n";
+        }    
     }
+    printf("%s", type);
 }
