@@ -16,9 +16,9 @@ int main(void)
     while (height < 1);
 
     // Print a pyramid of that height
-    for (int i = 1; i <= height; i++)
+    for (int row = 1; row <= height; row++)
     {
-        print_row(height - i, i);
+        print_row(height - row, row);
     }
 }
 
