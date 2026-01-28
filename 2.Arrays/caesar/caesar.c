@@ -9,56 +9,44 @@ char rotate(char c, int n);
 
 int main(int argc, string argv[])
 {
+    // Confirm argument is valid
     if (argc != 2 || only_digits(argv[1]) == false)
     {
         printf("Usage: ./caesar key\n");
         return 1;
     }
-    else
-    {
-        int key = atoi(argv[1]);
-        string plaintext = get_string("plaintext: ");
 
-        printf("ciphertext: ");
-        for (int i = 0, len = strlen(plaintext); i < len; i++)
-        {
-            printf("%c", rotate(plaintext[i], key));
-        }
-        printf("\n");
+    // Convert key to int and reduce to reasonable size
+    int key = atoi(argv[1]) % 26;
+    
+    // Prompt user for plaintext
+    string plaintext = get_string("plaintext: ");
+    
+    // Print ciphertext
+    printf("ciphertext: ");
+    for (char *p = plaintext; *p != '\0'; p++)
+    {
+        printf("%c", rotate(*p, key));
     }
+    printf("\n");
 }
 
-bool only_digits(string x)
+
+// Confirm argument is digits
+bool only_digits(string s)
 {
-    // Check that there are only digits in the argument
-    for (int i = 0, len = strlen(x); i < len; i++)
+    for (char *p = s; *p != '\0'; p++)
     {
-        if (isdigit(x[i]))
-        {
-        }
-        else
-        {
-            return false;
-        }
+        if (!isdigit(*p)) return false;
     }
     return true;
 }
 
+
+// Rotate alphabetical characters by KEY spaces
 char rotate(char c, int n)
 {
-    // Rotate the characters in the plaintext by KEY spaces
-    char x = 0;
-    if (isupper(c))
-    {
-        x = (((c - 65) + n) % 26) + 65;
-    }
-    else if (islower(c))
-    {
-        x = (((c - 97) + n) % 26) + 97;
-    }
-    else
-    {
-        x = c;
-    }
-    return x;
+    if (!isalpha(c)) return c;
+    int base = (isupper(c)) ? 'A' : 'a';
+    return ((c - base + n) % 26) + base;
 }
