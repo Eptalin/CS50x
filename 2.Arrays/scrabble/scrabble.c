@@ -7,6 +7,7 @@
 int points[26] = {1, 3, 3, 2, 1, 4, 2, 4, 1, 8, 5, 1, 3, 1, 1, 3, 10, 1, 1, 1, 1, 4, 4, 8, 4, 10};
 
 int calculate(string word);
+string report_winner(int score1, int score2);
 
 int main(void)
 {
@@ -19,18 +20,7 @@ int main(void)
     int score2 = calculate(word2);
 
     // Print results
-    if (score1 > score2)
-    {
-        printf("Player 1 wins!\n");
-    }
-    else if (score1 < score2)
-    {
-        printf("Player 2 wins!\n");
-    }
-    else
-    {
-        printf("Tie!\n");
-    }
+    printf("%s", report_winner(score1, score2));
 }
 
 int calculate(string word)
@@ -41,4 +31,20 @@ int calculate(string word)
         score += (isalpha(*p)) ? points[tolower(*p) - 'a'] : 0;
     }
     return score;
+}
+
+string report_winner(int score1, int score2)
+{
+    if (score1 > score2)
+    {
+        return "Player 1 wins!\n";
+    }
+    else if (score1 < score2)
+    {
+        return "Player 2 wins!\n";
+    }
+    else
+    {
+        return "Tie!\n";
+    }
 }
