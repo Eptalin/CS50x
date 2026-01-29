@@ -1,84 +1,72 @@
-#include <cs50.h>
+#include <cs50.h> // -lcs50
 #include <ctype.h>
-#include <math.h>
+#include <math.h> // -lm
 #include <stdio.h>
 #include <string.h>
 
-float calc_letters(string text);
-float calc_words(string text);
-float calc_sentences(string text);
+#define GRADE_BUFFER 20
+
+void count_all(string text, float *letters, float *words, float *sentences);
+int calc_CLI(float letters, float words, float sentences);
+void report_grade(int grade, char result[]);
 
 int main(void)
 {
     // Prompt user to input text
     string text = get_string("Text: ");
 
-    // Plug values into the Coleman-Liao Index
-    float L = (calc_letters(text) / calc_words(text)) * 100.0;
-    float S = (calc_sentences(text) / calc_words(text)) * 100.0;
+    // Count letters, words, sentences
+    float letters = 0, words = 1, sentences = 0;
+    count_all(text, &letters, &words, &sentences);
+    
+    // Compute rounded Coleman-Liao Index
+    int grade = calc_CLI(letters, words, sentences);
 
+    // Print reading level
+    char result[GRADE_BUFFER];
+    report_grade(grade, result);
+    printf("%s", result);
+}
+
+void count_all(string text, float *letters, float *words, float *sentences)
+{
+    for (char *p = text; *p != '\0'; p++)
+    {
+        if (isalpha(*p))
+        {
+            (*letters)++;
+        }
+        else if (isspace(*p))
+        {
+            (*words)++;
+        }
+        else if (*p == '.' || *p == '?' || *p == '!')
+        {
+            (*sentences)++;
+        }
+    }
+}
+
+int calc_CLI(float letters, float words, float sentences)
+{
+    float L = letters / words * 100.0;
+    float S = sentences / words * 100.0;
     float CLI = 0.0588 * L - 0.296 * S - 15.8;
-    int grade = round(CLI);
+    return round(CLI);
+}
 
+void report_grade(int grade, char result[])
+{
     if (grade < 1)
     {
-        printf("Before Grade 1\n");
+        snprintf(result, GRADE_BUFFER, "Before Grade 1\n");
     }
     else if (grade >= 16)
     {
-        printf("Grade 16+\n");
+        snprintf(result, GRADE_BUFFER, "Grade 16+\n");
     }
     else
     {
-        printf("Grade %i\n", grade);
+        snprintf(result, GRADE_BUFFER, "Grade %i\n", grade);
     }
-}
-
-float calc_letters(string text)
-{
-    // Calculate the total number of letters in the text
-    float letters = 0;
-
-    for (int i = 0, len = strlen(text); i < len; i++)
-    {
-        if (isupper(text[i]))
-        {
-            letters++;
-        }
-        if (islower(text[i]))
-        {
-            letters++;
-        }
-    }
-    return letters;
-}
-
-float calc_words(string text)
-{
-    // Calculate the total number of words in the text
-    float words = 0;
-
-    for (int i = 0, len = strlen(text); i < len; i++)
-    {
-        if (isspace(text[i]))
-        {
-            words++;
-        }
-    }
-    return words + 1;
-}
-
-float calc_sentences(string text)
-{
-    // Calculate the total number of words in the text
-    float sentences = 0;
-
-    for (int i = 0, len = strlen(text); i < len; i++)
-    {
-        if (text[i] == '.' || text[i] == '?' || text[i] == '!')
-        {
-            sentences++;
-        }
-    }
-    return sentences;
 }
