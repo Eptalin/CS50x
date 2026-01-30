@@ -4,111 +4,89 @@
 #include <stdlib.h>
 #include <string.h>
 
-bool alphabetical(string x);
-bool duplicate(string y);
+bool validate_args(int argc, string key);
+bool alphabetical(string s);
+bool duplicate(string s);
+char cipher(char c, string key);
 
 int main(int argc, string argv[])
+{
+    // Validate arguments
+    string key = argv[1];
+    if (!validate_args(argc, key)) return 1;
+
+    // Convert key into all capitals
+    for (int i = 0; i < 26; i++)
+    {
+        key[i] = toupper(key[i]);
+    }
+
+    // Prompt user for plaintext
+    string plaintext = get_string("plaintext: ");
+
+    // Print ciphertext
+    printf("ciphertext: ");
+    for (char *p = plaintext; *p != '\0'; p++)
+    {
+        printf("%c", cipher(*p, key));
+    }
+    printf("\n");
+}
+
+
+bool validate_args(int argc, string key)
 {
     // Confirm that 1 argument was added
     if (argc != 2)
     {
         printf("Usage: ./substitution key\n");
-        return 1;
+        return 0;
     }
 
-    // Confirm the key is 26 alphabet characters
-    else if (strlen(argv[1]) != 26 || alphabetical(argv[1]) == false)
+    // Confirm key is 26 alphabet characters
+    else if (strlen(key) != 26 || alphabetical(key) == false)
     {
         printf("Key must contain 26 alphabet characters.\n");
-        return 1;
+        return 0;
     }
 
-    // Confirm there are no duplicate characters in the key
-    else if (duplicate(argv[1]) == false)
+    // Confirm no duplicate characters in the key
+    else if (duplicate(key) == false)
     {
         printf("Key must not contain duplicate characters.\n");
-        return 1;
+        return 0;
     }
-    // If the key passes all the tests, continue program
-    else
-    {
-        // Convert key into all capitals
-        for (int i = 0; i < 26; i++)
-        {
-            argv[1][i] = toupper(argv[1][i]);
-        }
-
-        // Prompt user for plaintext
-        string plaintext = get_string("plaintext: ");
-
-        // Print the ciphertext by substituting characters
-        char ciphertext = 0;
-        printf("ciphertext: ");
-        for (int i = 0, len = strlen(plaintext); i < len; i++)
-        {
-            if (isupper(plaintext[i]))
-            {
-                ciphertext = argv[1][plaintext[i] - 65];
-                printf("%c", ciphertext);
-            }
-            else if (islower(plaintext[i]))
-            {
-                ciphertext = (argv[1][plaintext[i] - 97]) + 32;
-                printf("%c", ciphertext);
-            }
-            else
-            {
-                printf("%c", plaintext[i]);
-            }
-        }
-        printf("\n");
-    }
+    return 1;
 }
 
-bool alphabetical(string x)
+
+// Check all characters in key are alphabetical
+bool alphabetical(string s)
 {
-    // Check that all characters in the key are alphabet
-    for (int i = 0, len = strlen(x); i < len; i++)
+    for (char *p = s; *p != '\0'; p++)
     {
-        if (isalpha(x[i]))
-        {
-        }
-        else
-        {
-            return false;
-        }
+        if (!isalpha(*p)) return false;
     }
     return true;
 }
 
-bool duplicate(string y)
-{
-    // Create array to count frequency of letters and initialise all to 0
-    int letters[26];
-    for (int i = 0; i < 26; i++)
-    {
-        letters[i] = 0;
-    }
 
-    // Scan the key and tally up how often each letter appears
-    for (int j = 0, len = strlen(y); j < len; j++)
+// Scan key and verify no duplicates
+bool duplicate(string s)
+{
+    int letters[26] = {0};
+    for (char *p = s; *p != '\0'; p++)
     {
-        if (isupper(y[j]))
-        {
-            letters[y[j] - 'A']++;
-        }
-        else if (islower(y[j]))
-        {
-            letters[y[j] - 'a']++;
-        }
-    }
-    // If there are no duplicate characters, return True
-    for (int k = 0; k < 26; k++)
-    {
-        if (letters[k] > 1)
-        {
-            return false;
-        }
+        if (++letters[toupper(*p) - 'A'] != 1) return false;
     }
     return true;
+}
+
+
+// Substitute the plaintext char using key
+char cipher(char plaintext, string key)
+{
+    if (!isalpha(plaintext)) return plaintext;
+    char mapped = key[toupper(plaintext) - 'A'];
+    return (isupper(plaintext)) ? mapped : tolower(mapped);
 }
