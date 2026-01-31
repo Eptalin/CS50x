@@ -193,7 +193,7 @@ void sort_pairs(void)
 void lock_pairs(void) 
 { 
     // Iterate over pairs 
-    for (int i = 1; i < pair_count; i++) 
+    for (int i = 0; i < pair_count; i++) 
     { 
         // If not a cycle, lock pair 
         if (cycle_found(pairs[i].winner, pairs[i].loser)) 

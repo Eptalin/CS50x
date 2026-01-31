@@ -156,36 +156,25 @@ void add_pairs(void)
 // Sort pairs in decreasing order by strength of victory
 void sort_pairs(void)
 {
-    // Bubble sort
-    int i, j, flag;
+    // Insertion sort
     pair temp;
-    for (i = 0; i < pair_count - 1; i++)
+    for (int i = 1; i < pair_count; i++)
     {
-        // Reset flag to 0 each pass
-        flag = 0;
-        // Each pass will be 1 shorter than the previous
-        for (j = 0; j < pair_count-i-1; j++)
+        // Store element to insert into sorted position
+        temp = pairs[i];
+
+        // Set pair strength to compare against and index of last sorted element
+        int key = preferences[temp.winner][temp.loser];
+        int j = i - 1;
+
+        // Shift pairs to the right to make room for selected pair
+        while (j >= 0 && preferences[pairs[j].winner][pairs[j].loser] < key)
         {
-            int left = preferences[pairs[j].winner][pairs[j].loser];
-            int right = preferences[pairs[j+1].winner][pairs[j+1].loser];
-            if (left < right)
-            {
-                flag = 1;
-                // Store old left pair in temp
-                temp.winner = pairs[j].winner;
-                temp.loser = pairs[j].loser;
-                // Move the right pair to the left
-                pairs[j].winner = pairs[j+1].winner;
-                pairs[j].loser = pairs[j+1].loser;
-                // Replace old left pair with temp pair
-                pairs[j+1].winner = temp.winner;
-                pairs[j+1].loser = temp.loser;
-            }
+            pairs[j + 1] = pairs[j];
+            j--;
         }
-        if (flag == 0)
-        {
-            break;
-        }
+        // Insert selected pair into correct position
+        pairs[j + 1] = temp;
     }
     return;
 }
