@@ -1,5 +1,3 @@
-// Modifies the volume of an audio file
-
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -28,19 +26,20 @@ int main(int argc, char *argv[])
     if (output == NULL)
     {
         printf("Could not open file.\n");
+        fclose(input);
         return 1;
     }
 
     float factor = atof(argv[3]);
 
     // Copy header from input file to output file
-    uint8_t header[44];
-    fread(header, 1, 44, input);
-    fwrite(header, 1, 44, output);
+    uint8_t header[HEADER_SIZE];
+    fread(header, 1, HEADER_SIZE, input);
+    fwrite(header, 1, HEADER_SIZE, output);
 
-    // TODO: Read samples from input file and write updated data to output file
+    // Read samples from input file and write updated data to output file
     int16_t buffer;
-    while (fread(&buffer, sizeof(int16_t), 1, input) != 0)
+    while (fread(&buffer, sizeof(int16_t), 1, input) == 1)
     {
         buffer *= factor;
         fwrite(&buffer, sizeof(int16_t), 1, output);
