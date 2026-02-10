@@ -16,7 +16,6 @@ void grayscale(int height, int width, RGBTRIPLE image[height][width])
             image[i][j].rgbtBlue = average;
         }
     }
-    return;
 }
 
 // Convert image to sepia
@@ -52,7 +51,6 @@ void sepia(int height, int width, RGBTRIPLE image[height][width])
             image[i][j].rgbtBlue = sepiaBlue;
         }
     }
-    return;
 }
 
 // Reflect image horizontally
@@ -62,20 +60,11 @@ void reflect(int height, int width, RGBTRIPLE image[height][width])
     {
         for (int j = 0; j < (width / 2); j++)
         {
-            int temp = image[i][j].rgbtRed;
-            image[i][j].rgbtRed = image[i][(width - 1) - j].rgbtRed;
-            image[i][(width - 1) - j].rgbtRed = temp;
-
-            temp = image[i][j].rgbtGreen;
-            image[i][j].rgbtGreen = image[i][(width - 1) - j].rgbtGreen;
-            image[i][(width - 1) - j].rgbtGreen = temp;
-
-            temp = image[i][j].rgbtBlue;
-            image[i][j].rgbtBlue = image[i][(width - 1) - j].rgbtBlue;
-            image[i][(width - 1) - j].rgbtBlue = temp;
+            RGBTRIPLE temp = image[i][j];
+            image[i][j] = image[i][(width - 1) - j];
+            image[i][(width - 1) - j] = temp;
         }
     }
-    return;
 }
 
 // Blur image
@@ -91,25 +80,22 @@ void blur(int height, int width, RGBTRIPLE image[height][width])
         }
     }
 
-    // Initialise variables
-    float counter = 0.0;
-
-    int tallyRed = 0;
-    int tallyGreen = 0;
-    int tallyBlue = 0;
-
     // Iterate over each pixel on row i and column j
     for (int i = 0; i < height; i++)
     {
         for (int j = 0; j < width; j++)
         {
+            // Initialise variables
+            int counter = 0;
+            int tallyRed = 0, tallyGreen = 0, tallyBlue = 0;
+
             // Iterate over the surrounding pixels
             for (int x = -1; x <= 1; x++)
             {
                 for (int y = -1; y <= 1; y++)
                 {
-                    // Check if the pixel is within bounds, increment the counter, and add the RGB
-                    // values to the total
+                    // Check if pixel within bounds, increment the counter, and
+                    // add RGB values to sums
                     if (i + x >= 0 && i + x < height && j + y >= 0 && j + y < width)
                     {
                         counter += 1.0;
@@ -121,15 +107,9 @@ void blur(int height, int width, RGBTRIPLE image[height][width])
             }
 
             // Calculate the average RGB values and apply them to the original image
-            image[i][j].rgbtRed = (int) round(tallyRed / counter);
-            image[i][j].rgbtGreen = (int) round(tallyGreen / counter);
-            image[i][j].rgbtBlue = (int) round(tallyBlue / counter);
-
-            counter = 0.0;
-            tallyRed = 0;
-            tallyGreen = 0;
-            tallyBlue = 0;
+            image[i][j].rgbtRed = round(tallyRed / (float) counter);
+            image[i][j].rgbtGreen = round(tallyGreen / (float) counter);
+            image[i][j].rgbtBlue = round(tallyBlue / (float) counter);
         }
     }
-    return;
 }
