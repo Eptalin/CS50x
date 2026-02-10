@@ -23,6 +23,11 @@ int main(int argc, char *argv[])
 
     // Open input file to read
     FILE *card = fopen(argv[1], "r");
+    if (card == NULL)
+    {
+        printf("Could not open file.\n");
+        return 1;        
+    }
 
     // While there's still data left on the memory card
     while (fread(buffer, 1, block_size, card) == block_size)
@@ -49,6 +54,8 @@ int main(int argc, char *argv[])
             fwrite(buffer, 1, block_size, jpeg);
         }
     }
+
+    // Close open files
     if (jpeg != NULL)
     {
         fclose(jpeg);
