@@ -15,6 +15,7 @@ void grayscale(int height, int width, RGBTRIPLE image[height][width])
             image[i][j].rgbtBlue = average;
         }
     }
+    return;
 }
 
 // Reflect image horizontally
@@ -24,11 +25,20 @@ void reflect(int height, int width, RGBTRIPLE image[height][width])
     {
         for (int j = 0; j < (width / 2); j++)
         {
-            RGBTRIPLE temp = image[i][j];
-            image[i][j] = image[i][(width - 1) - j];
-            image[i][(width - 1) - j] = temp;
+            int temp = image[i][j].rgbtRed;
+            image[i][j].rgbtRed = image[i][(width - 1) - j].rgbtRed;
+            image[i][(width - 1) - j].rgbtRed = temp;
+
+            temp = image[i][j].rgbtGreen;
+            image[i][j].rgbtGreen = image[i][(width - 1) - j].rgbtGreen;
+            image[i][(width - 1) - j].rgbtGreen = temp;
+
+            temp = image[i][j].rgbtBlue;
+            image[i][j].rgbtBlue = image[i][(width - 1) - j].rgbtBlue;
+            image[i][(width - 1) - j].rgbtBlue = temp;
         }
     }
+    return;
 }
 
 // Blur image
@@ -44,16 +54,18 @@ void blur(int height, int width, RGBTRIPLE image[height][width])
         }
     }
 
-    
+    // Initialise variables
+    float counter = 0.0;
+
+    int tallyRed = 0;
+    int tallyGreen = 0;
+    int tallyBlue = 0;
+
     // Iterate over each pixel on row i and column j
     for (int i = 0; i < height; i++)
     {
         for (int j = 0; j < width; j++)
         {
-            // Initialise variables
-            int counter = 0;
-            int tallyRed = 0, tallyGreen = 0, tallyBlue = 0;
-
             // Iterate over the surrounding pixels
             for (int x = -1; x <= 1; x++)
             {
@@ -63,7 +75,7 @@ void blur(int height, int width, RGBTRIPLE image[height][width])
                     // and add the RGB values to the tally
                     if (i + x >= 0 && i + x < height && j + y >= 0 && j + y < width)
                     {
-                        counter += 1;
+                        counter += 1.0;
                         tallyRed += copy[i + x][j + y].rgbtRed;
                         tallyGreen += copy[i + x][j + y].rgbtGreen;
                         tallyBlue += copy[i + x][j + y].rgbtBlue;
@@ -72,11 +84,17 @@ void blur(int height, int width, RGBTRIPLE image[height][width])
             }
 
             // Calculate the average RGB values and apply them to the original image
-            image[i][j].rgbtRed = round(tallyRed / (float) counter);
-            image[i][j].rgbtGreen = round(tallyGreen / (float) counter);
-            image[i][j].rgbtBlue = round(tallyBlue / (float) counter);
+            image[i][j].rgbtRed = (int) round(tallyRed / counter);
+            image[i][j].rgbtGreen = (int) round(tallyGreen / counter);
+            image[i][j].rgbtBlue = (int) round(tallyBlue / counter);
+
+            counter = 0.0;
+            tallyRed = 0;
+            tallyGreen = 0;
+            tallyBlue = 0;
         }
     }
+    return;
 }
 
 // Detect edges
@@ -92,20 +110,24 @@ void edges(int height, int width, RGBTRIPLE image[height][width])
         }
     }
 
-    // Initialise kernal arrays
+    // Initialise variables
     int Gx[3][3] = {{-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1}};
     int Gy[3][3] = {{-1, -2, -1}, {0, 0, 0}, {1, 2, 1}};
-    
+    int GxRed = 0;
+    int GxGreen = 0;
+    int GxBlue = 0;
+    int GyRed = 0;
+    int GyGreen = 0;
+    int GyBlue = 0;
+    int value_red;
+    int value_green;
+    int value_blue;
+
     // Iterate over each pixel
     for (int i = 0; i < height; i++)
     {
         for (int j = 0; j < width; j++)
         {
-            // Initialise variables
-            int GxRed = 0, GxGreen = 0, GxBlue = 0;
-            int GyRed = 0, GyGreen = 0, GyBlue = 0;
-            int value_red = 0, value_green = 0, value_blue = 0;
-
             // Iterate over the pixels surrounding each pixel
             for (int x = -1; x <= 1; x++)
             {
@@ -125,12 +147,44 @@ void edges(int height, int width, RGBTRIPLE image[height][width])
                 }
             }
             // Sobel filter algorithm
-            value_red = round(sqrt((GxRed * GxRed) + (GyRed * GyRed)));
-            image[i][j].rgbtRed = (value_red < 255) ? value_red : 255;
-            value_green = round(sqrt((GxGreen * GxGreen) + (GyGreen * GyGreen)));
-            image[i][j].rgbtGreen = (value_green < 255) ? value_green : 255;
-            value_blue = round(sqrt((GxBlue * GxBlue) + (GyBlue * GyBlue)));
-            image[i][j].rgbtBlue = (value_blue < 255) ? value_blue : 255;
+            value_red = (int) round(sqrt((GxRed * GxRed) + (GyRed * GyRed)));
+            if (value_red < 255)
+            {
+                image[i][j].rgbtRed = value_red;
+            }
+            else
+            {
+                image[i][j].rgbtRed = 255;
+            }
+
+            value_green = (int) round(sqrt((GxGreen * GxGreen) + (GyGreen * GyGreen)));
+            if (value_green < 255)
+            {
+                image[i][j].rgbtGreen = value_green;
+            }
+            else
+            {
+                image[i][j].rgbtGreen = 255;
+            }
+
+            value_blue = (int) round(sqrt((GxBlue * GxBlue) + (GyBlue * GyBlue)));
+            if (value_blue < 255)
+            {
+                image[i][j].rgbtBlue = value_blue;
+            }
+            else
+            {
+                image[i][j].rgbtBlue = 255;
+            }
+
+            // Reset values to 0
+            GxRed = 0;
+            GxGreen = 0;
+            GxBlue = 0;
+            GyRed = 0;
+            GyGreen = 0;
+            GyBlue = 0;
         }
     }
+    return;
 }
